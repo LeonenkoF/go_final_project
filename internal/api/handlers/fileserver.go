@@ -1,28 +1,11 @@
-package main
+package handler
 
 import (
-	"fmt"
-	"main/config"
 	"net/http"
 	"strings"
 
-	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/v5"
 )
-
-var webDir = "D:/Dev/go_final_project/web"
-
-func main() {
-	cfg := config.New()
-
-	r := chi.NewRouter()
-	FileServer(r, "/", http.Dir(webDir))
-
-	if err := http.ListenAndServe(cfg.Port, r); err != nil {
-		fmt.Printf("Ошибка при запуске сервера: %s", err.Error())
-		return
-	}
-
-}
 
 func FileServer(r chi.Router, path string, root http.FileSystem) {
 	if strings.ContainsAny(path, "{}*") {
