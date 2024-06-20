@@ -18,15 +18,6 @@ const op = "storage.sqlite.New"
 
 const dbFileName = "scheduler.db"
 
-const createTableQuery = `CREATE TABLE IF NOT EXISTS scheduler(
-	id  integer primary key autoincrement,
-	date char(8),
-	title varchar,
-	comment varchar,
-	repeat varchar);
-CREATE INDEX IF NOT EXISTS scheduler_date on scheduler(date);
-`
-
 func New() (*DBManager, error) {
 	appPath, err := os.Executable()
 	if err != nil {
