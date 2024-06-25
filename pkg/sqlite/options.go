@@ -58,7 +58,7 @@ func (s *DBManager) AddTask(input entity.Task) error {
 }
 
 func (s *DBManager) getTaskById(id int) error {
-	const op = "storage.sqlite.AddTask"
+	const op = "storage.sqlite.getTaskById"
 
 	_, err := s.db.Exec(getTaskByIdQuery, id)
 	if err != nil {

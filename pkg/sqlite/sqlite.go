@@ -14,11 +14,10 @@ type DBManager struct {
 	db *sql.DB
 }
 
-const op = "storage.sqlite.New"
-
 const dbFileName = "scheduler.db"
 
 func New() (*DBManager, error) {
+	const op = "storage.sqlite.New"
 	appPath, err := os.Executable()
 	if err != nil {
 		log.Fatal(err)

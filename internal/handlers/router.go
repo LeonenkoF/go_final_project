@@ -10,4 +10,5 @@ var webDir = "./web"
 
 func SetHandlers(router chi.Router) {
 	FileServer(router, "/", http.Dir(webDir))
+	router.Get("/api/nextdate", GetNextDate)
 }
