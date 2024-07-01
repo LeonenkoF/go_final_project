@@ -3,6 +3,8 @@ package sqlite
 import (
 	"fmt"
 	"main/internal/entity"
+
+	_ "modernc.org/sqlite"
 )
 
 func (s *DBManager) GetTasks() ([]entity.Task, error) {
@@ -47,14 +49,17 @@ func (s *DBManager) UpdateTask(input entity.Task) error {
 	return nil
 }
 
-func (s *DBManager) AddTask(input entity.Task) error {
+func (s *DBManager) AddTask(input entity.AddTask) int64 {
 	const op = "storage.sqlite.AddTask"
+	fmt.Print(input)
 
-	_, err := s.db.Exec(addTaskQuery, input)
+	res, err := s.db.Exec(addTaskQuery, input.Date, input.Title, input.Comment, input.Repeat)
 	if err != nil {
-		return fmt.Errorf("%s: %w", op, err)
+		fmt.Printf("%s: %w", op, err)
 	}
-	return nil
+	addedId, _ := res.LastInsertId()
+
+	return addedId
 }
 
 func (s *DBManager) getTaskById(id int) error {

@@ -10,19 +10,20 @@ CREATE INDEX IF NOT EXISTS scheduler_date on scheduler(date);
 `
 const addTaskQuery = `INSERT INTO scheduler
 (date, title, comment, repeat)
-VALUES(:date, :title, :comment, :repeat)
-RETURNING id;
-`
+VALUES(?, ?, ?, ?);`
 const getTasksQuery = `SELECT id, date, title, comment, repeat 
 FROM scheduler ORDER 
 BY date ASC;`
+
 const getTaskByIdQuery = `SELECT id, date, title, comment, repeat 
 FROM scheduler 
 WHERE id = :id;`
+
 const updateTaskQuery = `UPDATE scheduler
 SET date=:date, 
 title=:title, 
 comment=:comment, 
 repeat=:repeat
 WHERE id=:id;`
+
 const deleteTaskQuery = "DELETE FROM scheduler WHERE id=:id;"

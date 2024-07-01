@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"main/pkg/sqlite"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
@@ -8,7 +9,15 @@ import (
 
 var webDir = "./web"
 
-func SetHandlers(router chi.Router) {
+type Handlers struct {
+	db *sqlite.DBManager
+}
+
+func NewHandler(db *sqlite.DBManager) *Handlers {
+	return &Handlers{db: db}
+}
+
+func (h *Handlers) SetHandlers(router chi.Router) {
 	FileServer(router, "/", http.Dir(webDir))
-	router.Get("/api/nextdate", GetNextDate)
+	router.Post("/api/task", h.AddTaskHandler)
 }
