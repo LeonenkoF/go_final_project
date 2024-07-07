@@ -8,11 +8,10 @@ import (
 )
 
 func (s *DBManager) GetTasks() ([]entity.Task, error) {
-	const op = "storage.sqlite.GetAll"
 
 	stmt, err := s.db.Query(getTasksQuery)
 	if err != nil {
-		return nil, fmt.Errorf("%s: %w", op, err)
+		return nil, err
 	}
 	defer stmt.Close()
 	data := []entity.Task{}
@@ -22,52 +21,55 @@ func (s *DBManager) GetTasks() ([]entity.Task, error) {
 		err := stmt.Scan(&p.Id, &p.Date, &p.Title, &p.Comment, &p.Repeat)
 		if err != nil {
 			fmt.Println(err)
-			return nil, fmt.Errorf("%s: %w", op, err)
+			return nil, err
 		}
+
 		data = append(data, p)
 	}
 	return data, nil
 }
 
-func (s *DBManager) DeleteTask(id int) error {
-	const op = "storage.sqlite.DeleteTask"
+func (s *DBManager) DeleteTask(Id string) error {
 
-	_, err := s.db.Exec(deleteTaskQuery, id)
+	_, err := s.db.Exec(deleteTaskQuery, Id)
 	if err != nil {
-		return fmt.Errorf("%s: %w", op, err)
 	}
 	return nil
 }
 
 func (s *DBManager) UpdateTask(input entity.Task) error {
-	const op = "storage.sqlite.UpdateTask"
 
-	_, err := s.db.Exec(updateTaskQuery, input)
+	result, err := s.db.Exec(updateTaskQuery, input.Date, input.Title, input.Comment, input.Repeat, input.Id)
 	if err != nil {
-		return fmt.Errorf("%s: %w", op, err)
+		return err
+	}
+
+	value, err := result.RowsAffected()
+	if value == 0 {
+		return fmt.Errorf("error")
 	}
 	return nil
 }
 
 func (s *DBManager) AddTask(input entity.AddTask) int64 {
-	const op = "storage.sqlite.AddTask"
-	fmt.Print(input)
 
 	res, err := s.db.Exec(addTaskQuery, input.Date, input.Title, input.Comment, input.Repeat)
 	if err != nil {
-		fmt.Printf("%s: %w", op, err)
 	}
 	addedId, _ := res.LastInsertId()
 
 	return addedId
 }
 
-func (s *DBManager) getTaskById(id int) error {
-	const op = "storage.sqlite.getTaskById"
+func (s *DBManager) GetTaskById(id string) (entity.Task, error) {
 
-	_, err := s.db.Exec(getTaskByIdQuery, id)
+	p := entity.Task{}
+
+	stmt := s.db.QueryRow(getTaskByIdQuery, id)
+
+	err := stmt.Scan(&p.Id, &p.Date, &p.Title, &p.Comment, &p.Repeat)
 	if err != nil {
-		return fmt.Errorf("%s: %w", op, err)
+		return p, err
 	}
-	return nil
+	return p, nil
 }

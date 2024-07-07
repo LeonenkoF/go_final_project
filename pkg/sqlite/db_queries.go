@@ -13,17 +13,17 @@ const addTaskQuery = `INSERT INTO scheduler
 VALUES(?, ?, ?, ?);`
 const getTasksQuery = `SELECT id, date, title, comment, repeat 
 FROM scheduler ORDER 
-BY date ASC;`
+BY date ASC
+LIMIT 15;`
 
 const getTaskByIdQuery = `SELECT id, date, title, comment, repeat 
-FROM scheduler 
-WHERE id = :id;`
+FROM scheduler WHERE id=?;`
 
-const updateTaskQuery = `UPDATE scheduler
-SET date=:date, 
-title=:title, 
-comment=:comment, 
-repeat=:repeat
-WHERE id=:id;`
+const updateTaskQuery = `UPDATE scheduler SET 
+date=?, 
+title=?, 
+comment=?, 
+repeat=?
+WHERE id=?;`
 
 const deleteTaskQuery = "DELETE FROM scheduler WHERE id=:id;"

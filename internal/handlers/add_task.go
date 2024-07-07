@@ -29,19 +29,21 @@ func (h *Handlers) AddTaskHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		parsedDate, err := time.Parse("20060102", input.Date)
-		if err != nil {
-			http.Error(w, fmt.Sprintf(`{"error": "дата представлена в формате, отличном от 20060102"}`), http.StatusBadRequest)
-			return
-		}
-
 		if len(input.Date) == 0 || input.Date == "" {
 			input.Date = time.Now().Format("20060102")
 
-		} else if parsedDate.Before(time.Now()) {
+		}
+
+		_, err = time.Parse("20060102", input.Date)
+		if input.Date != " " {
+			if err != nil {
+				http.Error(w, fmt.Sprintf(`{"error": "дата представлена в формате, отличном от 20060102"}`), http.StatusBadRequest)
+				return
+			}
+		}
+		if input.Date < time.Now().Format("20060102") {
 			if len(input.Repeat) == 0 || input.Repeat == "" {
 				input.Date = time.Now().Format("20060102")
-
 			} else {
 				input.Date, err = usecase.NextDate(time.Now(), input.Date, input.Repeat)
 				if err != nil {
@@ -56,8 +58,8 @@ func (h *Handlers) AddTaskHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		response := entity.Task{Id: insertId}
-		responseBytes, _ := json.Marshal(response)
-		w.Write(responseBytes)
+		res := entity.Task{Id: insertId}
+		respBytes, _ := json.Marshal(res)
+		w.Write(respBytes)
 	}
 }
