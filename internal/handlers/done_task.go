@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-func (h *Handlers) DoneTaskHander(w http.ResponseWriter, r *http.Request) {
+func (h *Handlers) DoneTaskHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	db := h.db
 
@@ -39,7 +39,7 @@ func (h *Handlers) DoneTaskHander(w http.ResponseWriter, r *http.Request) {
 
 		task.Date = nextDate
 
-		err = db.UpdateTask(task)
+		err = db.UpdateTask(&task)
 		if err != nil {
 			http.Error(w, fmt.Sprintf(`{"error": "задача не обновлена"}`), http.StatusBadRequest)
 			return

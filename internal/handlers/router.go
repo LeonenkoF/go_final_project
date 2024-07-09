@@ -20,8 +20,10 @@ func NewHandler(db *sqlite.DBManager) *Handlers {
 func (h *Handlers) SetHandlers(router chi.Router) {
 	FileServer(router, "/", http.Dir(webDir))
 	router.Post("/api/task", h.AddTaskHandler)
-	router.Post("/api/task/done", h.DoneTaskHander)
+	router.Post("/api/task/done", h.DoneTaskHandler)
 	router.Get("/api/tasks", h.GetAllHandler)
+	router.Get("/api/nextdate", GetNextDate)
 	router.Get("/api/task", h.GetTaskByIdHander)
 	router.Put("/api/task", h.UpdateTaskHandler)
+	router.Delete("/api/task", h.DeleteTaskHandler)
 }

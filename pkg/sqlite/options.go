@@ -31,13 +31,19 @@ func (s *DBManager) GetTasks() ([]entity.Task, error) {
 
 func (s *DBManager) DeleteTask(Id string) error {
 
-	_, err := s.db.Exec(deleteTaskQuery, Id)
+	result, err := s.db.Exec(deleteTaskQuery, Id)
 	if err != nil {
+		return err
+	}
+
+	value, err := result.RowsAffected()
+	if value == 0 {
+		return fmt.Errorf("error")
 	}
 	return nil
 }
 
-func (s *DBManager) UpdateTask(input entity.Task) error {
+func (s *DBManager) UpdateTask(input *entity.Task) error {
 
 	result, err := s.db.Exec(updateTaskQuery, input.Date, input.Title, input.Comment, input.Repeat, input.Id)
 	if err != nil {

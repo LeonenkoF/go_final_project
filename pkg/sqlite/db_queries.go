@@ -26,4 +26,4 @@ comment=?,
 repeat=?
 WHERE id=?;`
 
-const deleteTaskQuery = "DELETE FROM scheduler WHERE id=:id;"
+const deleteTaskQuery = "DELETE FROM scheduler WHERE id=?;"

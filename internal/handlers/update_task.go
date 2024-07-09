@@ -58,7 +58,7 @@ func (h *Handlers) UpdateTaskHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	err = db.UpdateTask(input)
+	err = db.UpdateTask(&input)
 	if err != nil {
 		http.Error(w, fmt.Sprintf(`{"error":"Задача не найдена"}`), http.StatusBadRequest)
 		return
