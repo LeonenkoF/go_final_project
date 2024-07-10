@@ -7,7 +7,7 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
-var webDir = "./web"
+var webDir = ""
 
 type Handlers struct {
 	db *sqlite.DBManager
