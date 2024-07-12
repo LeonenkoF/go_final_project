@@ -12,6 +12,7 @@ import (
 )
 
 func main() {
+
 	cfg := config.New()
 
 	r := chi.NewRouter()
@@ -23,6 +24,7 @@ func main() {
 	}
 	h := handler.NewHandler(db)
 	h.SetHandlers(r)
+	r.Handle("/*", http.FileServer(http.Dir("./web")))
 
 	if err := http.ListenAndServe(cfg.Port, r); err != nil {
 		log.Fatalf("Ошибка при запуске сервера: %s", err.Error())
