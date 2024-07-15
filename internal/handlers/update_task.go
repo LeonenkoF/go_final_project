@@ -60,10 +60,14 @@ func (h *Handlers) UpdateTaskHandler(w http.ResponseWriter, r *http.Request) {
 
 	err = db.UpdateTask(&input)
 	if err != nil {
-		http.Error(w, fmt.Sprintf(`{"error":"Задача не найдена"}`), http.StatusBadRequest)
+		http.Error(w, fmt.Sprintf(`{"error":"Не удалось отредактировать задачу"}`), http.StatusInternalServerError)
 		return
 	}
 	res := entity.Task{}
-	respBytes, _ := json.Marshal(res)
+	respBytes, err := json.Marshal(res)
+	if err != nil {
+		http.Error(w, fmt.Sprintf(`{"error":"Не удалось преобразовать данные в JSON формат"}`), http.StatusInternalServerError)
+		return
+	}
 	w.Write(respBytes)
 }

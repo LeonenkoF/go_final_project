@@ -1,16 +1,16 @@
 package handler
 
 import (
-	"main/pkg/sqlite"
+	repository "main/pkg/sqlite"
 
 	"github.com/go-chi/chi/v5"
 )
 
 type Handlers struct {
-	db *sqlite.DBManager
+	db *repository.Store
 }
 
-func NewHandler(db *sqlite.DBManager) *Handlers {
+func NewHandler(db *repository.Store) *Handlers {
 	return &Handlers{db: db}
 }
 

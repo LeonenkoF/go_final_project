@@ -1,4 +1,4 @@
-package sqlite
+package repository
 
 import (
 	"database/sql"
@@ -10,13 +10,11 @@ import (
 	_ "modernc.org/sqlite"
 )
 
-type DBManager struct {
+type Store struct {
 	db *sql.DB
 }
 
-const dbFileName = "scheduler.db"
-
-func New() (*DBManager, error) {
+func New(dbFileName string) (*Store, error) {
 	const op = "storage.sqlite.New"
 	appPath, err := os.Executable()
 	if err != nil {
@@ -35,7 +33,14 @@ func New() (*DBManager, error) {
 		log.Fatal(err)
 	}
 	if install {
-		stmt, err := db.Prepare(createTableQuery)
+		stmt, err := db.Prepare(`CREATE TABLE IF NOT EXISTS scheduler(
+			id  integer primary key autoincrement,
+			date char(8),
+			title varchar,
+			comment varchar,
+			repeat varchar);
+		CREATE INDEX IF NOT EXISTS scheduler_date on scheduler(date);
+		`)
 		if err != nil {
 			return nil, fmt.Errorf("%s: %w", op, err)
 		}
@@ -46,9 +51,9 @@ func New() (*DBManager, error) {
 		}
 
 	}
-	return &DBManager{db: db}, nil
+	return &Store{db: db}, nil
 }
 
-func (s *DBManager) Close() error {
+func (s *Store) Close() error {
 	return s.db.Close()
 }

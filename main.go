@@ -4,7 +4,7 @@ import (
 	"log"
 	"main/config"
 	handler "main/internal/handlers"
-	"main/pkg/sqlite"
+	repository "main/pkg/sqlite"
 	"net/http"
 	"os"
 
@@ -17,7 +17,7 @@ func main() {
 
 	r := chi.NewRouter()
 
-	db, err := sqlite.New()
+	db, err := repository.New("scheduler.db")
 	if err != nil {
 		log.Fatal("failed to init storage", err, db)
 		os.Exit(1)

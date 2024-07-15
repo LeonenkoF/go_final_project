@@ -20,7 +20,7 @@ func (h *Handlers) GetTaskByIdHander(w http.ResponseWriter, r *http.Request) {
 
 	resp, err := json.Marshal(data)
 	if err != nil {
-		http.Error(w, fmt.Sprintf(`{"error": "Задача не найдена"}`), http.StatusBadRequest)
+		http.Error(w, fmt.Sprintf(`{"error": "ошибка десериализации JSON"}`), http.StatusInternalServerError)
 		return
 	}
 	w.WriteHeader(http.StatusOK)
