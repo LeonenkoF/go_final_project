@@ -3,6 +3,7 @@ package handler
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"main/internal/entity"
 	"main/internal/usecase"
 	"net/http"
@@ -66,7 +67,7 @@ func (h *Handlers) UpdateTaskHandler(w http.ResponseWriter, r *http.Request) {
 	res := entity.Task{}
 	respBytes, err := json.Marshal(res)
 	if err != nil {
-		http.Error(w, fmt.Sprintf(`{"error":"Не удалось преобразовать данные в JSON формат"}`), http.StatusInternalServerError)
+		log.Fatalf("Ошибка при преобразовании в JSON формат: %s", err.Error())
 		return
 	}
 	w.Write(respBytes)

@@ -17,7 +17,7 @@ func main() {
 
 	r := chi.NewRouter()
 
-	db, err := repository.New("scheduler.db")
+	db, err := repository.NewStore("scheduler.db")
 	if err != nil {
 		log.Fatal("failed to init storage", err, db)
 		os.Exit(1)
