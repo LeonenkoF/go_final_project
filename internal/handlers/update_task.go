@@ -67,8 +67,12 @@ func (h *Handlers) UpdateTaskHandler(w http.ResponseWriter, r *http.Request) {
 	res := entity.Task{}
 	respBytes, err := json.Marshal(res)
 	if err != nil {
-		log.Fatalf("Ошибка при преобразовании в JSON формат: %s", err.Error())
+		http.Error(w, fmt.Sprintf(`{"error":"Ошибка при преобразовании в JSON формат"}`), http.StatusInternalServerError)
 		return
 	}
-	w.Write(respBytes)
+
+	_, err = w.Write(respBytes)
+	if err != nil {
+		log.Println("Ошибка при записи данных в ResponseWriter")
+	}
 }
