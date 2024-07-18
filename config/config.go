@@ -1,7 +1,7 @@
 package config
 
 import (
-	"log"
+	"fmt"
 	"time"
 
 	"github.com/ilyakaznacheev/cleanenv"
@@ -24,11 +24,13 @@ func New() *Config {
 	configPath := "config.yml"
 
 	if configPath == "" {
-		log.Fatal("Config path is not set")
+		fmt.Errorf("Config path is not set")
+		return nil
 	}
 
 	if err := cleanenv.ReadConfig(configPath, cfg); err != nil {
-		log.Fatalf("Cannot read config: %s", err)
+		fmt.Errorf("Cannot read config: %s", err)
+		return nil
 	}
 
 	return cfg

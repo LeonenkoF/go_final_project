@@ -3,8 +3,10 @@ package handler
 import (
 	"encoding/json"
 	"fmt"
-	"main/internal/entity"
+	"log"
 	"net/http"
+
+	"main/internal/entity"
 )
 
 func (h *Handlers) GetAllHandler(w http.ResponseWriter, r *http.Request) {
@@ -35,7 +37,11 @@ func (h *Handlers) GetAllHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		w.WriteHeader(http.StatusOK)
-		w.Write(resp)
+
+		_, err = w.Write(resp)
+		if err != nil {
+			log.Println("Ошибка при записи данных в ResponseWriter")
+		}
 
 	}
 }

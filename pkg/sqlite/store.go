@@ -4,11 +4,12 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
-	"main/internal/entity"
 	"os"
 	"path/filepath"
 
 	_ "modernc.org/sqlite"
+
+	"main/internal/entity"
 )
 
 type Store struct {
@@ -19,7 +20,7 @@ func NewStore(dbFileName string) (*Store, error) {
 	const op = "storage.sqlite.New"
 	appPath, err := os.Executable()
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 
 	dbFile := filepath.Join(filepath.Dir(appPath), dbFileName)
@@ -31,7 +32,7 @@ func NewStore(dbFileName string) (*Store, error) {
 	}
 	db, err := sql.Open("sqlite", dbFileName)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 	if install {
 		stmt, err := db.Prepare(`CREATE TABLE IF NOT EXISTS scheduler(
@@ -124,7 +125,12 @@ func (s *Store) AddTask(input entity.AddTask) int64 {
 	VALUES(?, ?, ?, ?);`, input.Date, input.Title, input.Comment, input.Repeat)
 	if err != nil {
 	}
-	addedId, _ := res.LastInsertId()
+	addedId, err := res.LastInsertId()
+
+	if err != nil {
+		fmt.Errorf("error")
+		return addedId
+	}
 
 	return addedId
 }

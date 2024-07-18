@@ -3,9 +3,10 @@ package handler
 import (
 	"encoding/json"
 	"fmt"
-	"main/internal/usecase"
 	"net/http"
 	"time"
+
+	"main/internal/usecase"
 )
 
 func (h *Handlers) DoneTaskHandler(w http.ResponseWriter, r *http.Request) {

@@ -1,9 +1,9 @@
 package handler
 
 import (
-	store "main/pkg/sqlite"
-
 	"github.com/go-chi/chi/v5"
+
+	store "main/pkg/sqlite"
 )
 
 type Handlers struct {

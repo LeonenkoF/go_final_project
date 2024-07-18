@@ -2,13 +2,14 @@ package main
 
 import (
 	"log"
-	"main/config"
-	handler "main/internal/handlers"
-	store "main/pkg/sqlite"
 	"net/http"
 	"os"
 
 	"github.com/go-chi/chi/v5"
+
+	"main/config"
+	handler "main/internal/handlers"
+	store "main/pkg/sqlite"
 )
 
 func main() {

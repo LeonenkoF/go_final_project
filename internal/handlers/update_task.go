@@ -4,11 +4,12 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
-	"main/internal/entity"
-	"main/internal/usecase"
 	"net/http"
 	"strconv"
 	"time"
+
+	"main/internal/entity"
+	"main/internal/usecase"
 )
 
 func (h *Handlers) UpdateTaskHandler(w http.ResponseWriter, r *http.Request) {
@@ -25,7 +26,12 @@ func (h *Handlers) UpdateTaskHandler(w http.ResponseWriter, r *http.Request) {
 
 	_, err = strconv.Atoi(input.Id)
 
-	if input.Id == "" || len(input.Id) == 0 || err != nil {
+	if err != nil {
+		http.Error(w, fmt.Sprintf(`{"error": "id должен быть числом"}`), http.StatusBadRequest)
+		return
+	}
+
+	if input.Id == "" || len(input.Id) == 0 {
 		http.Error(w, fmt.Sprintf(`{"error": "не указан id"}`), http.StatusBadRequest)
 		return
 	}

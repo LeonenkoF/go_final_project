@@ -38,7 +38,10 @@ func NextDate(now time.Time, date string, repeat string) (string, error) {
 		if len(repeatData) != 2 {
 			return "", fmt.Errorf("wrong days count")
 		}
-		days, _ := strconv.Atoi(repeatData[1])
+		days, err := strconv.Atoi(repeatData[1])
+		if err != nil {
+			return "", fmt.Errorf("wrong days count, err:%s", err)
+		}
 
 		if days > 400 || days < 0 {
 			return "", fmt.Errorf("wrong days count")

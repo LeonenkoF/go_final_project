@@ -10,7 +10,7 @@ import (
 
 func FileServer(router chi.Router, path string, root http.FileSystem) {
 	if strings.ContainsAny(path, "{}*") {
-		log.Fatal("FileServer does not permit any URL parameters.")
+		log.Println("FileServer does not permit any URL parameters.")
 	}
 
 	if path != "/" && path[len(path)-1] != '/' {

@@ -3,6 +3,7 @@ package handler
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 )
 
@@ -24,6 +25,11 @@ func (h *Handlers) GetTaskByIdHander(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.WriteHeader(http.StatusOK)
-	w.Write(resp)
+
+	_, err = w.Write(resp)
+
+	if err != nil {
+		log.Println("Ошибка при записи данных в ResponseWriter")
+	}
 
 }
