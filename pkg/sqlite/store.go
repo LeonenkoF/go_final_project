@@ -21,6 +21,7 @@ func NewStore(dbFileName string) (*Store, error) {
 	appPath, err := os.Executable()
 	if err != nil {
 		log.Println(err)
+		return nil, err
 	}
 
 	dbFile := filepath.Join(filepath.Dir(appPath), dbFileName)
@@ -33,6 +34,7 @@ func NewStore(dbFileName string) (*Store, error) {
 	db, err := sql.Open("sqlite", dbFileName)
 	if err != nil {
 		log.Println(err)
+		return nil, err
 	}
 	if install {
 		stmt, err := db.Prepare(`CREATE TABLE IF NOT EXISTS scheduler(
@@ -94,7 +96,7 @@ func (s *Store) DeleteTask(Id string) error {
 
 	value, err := result.RowsAffected()
 	if value == 0 {
-		return fmt.Errorf("error")
+		return fmt.Errorf("error: %s", err)
 	}
 	return nil
 }
@@ -113,26 +115,27 @@ func (s *Store) UpdateTask(input *entity.Task) error {
 
 	value, err := result.RowsAffected()
 	if value == 0 {
-		return fmt.Errorf("error")
+		return fmt.Errorf("error: %s", err)
 	}
 	return nil
 }
 
-func (s *Store) AddTask(input entity.AddTask) int64 {
+func (s *Store) AddTask(input entity.AddTask) (int64, error) {
 
 	res, err := s.db.Exec(`INSERT INTO scheduler
 	(date, title, comment, repeat)
 	VALUES(?, ?, ?, ?);`, input.Date, input.Title, input.Comment, input.Repeat)
 	if err != nil {
+		fmt.Println("error: %s", err)
+		return 0, fmt.Errorf("error: %s", err)
 	}
 	addedId, err := res.LastInsertId()
 
 	if err != nil {
-		fmt.Errorf("error")
-		return addedId
+		return addedId, fmt.Errorf("error: %s", err)
 	}
 
-	return addedId
+	return addedId, nil
 }
 
 func (s *Store) GetTaskById(id string) (entity.Task, error) {

@@ -1,7 +1,7 @@
 package config
 
 import (
-	"fmt"
+	"errors"
 	"time"
 
 	"github.com/ilyakaznacheev/cleanenv"
@@ -18,21 +18,19 @@ type HTTPServer struct {
 	IdleTimeout time.Duration `yaml:"idle-timeout" env-default:"60s"`
 }
 
-func New() *Config {
+func New() (*Config, error) {
 	cfg := &Config{}
 
 	configPath := "config.yml"
 
 	if configPath == "" {
-		fmt.Errorf("Config path is not set")
-		return nil
+		return nil, errors.New("Config path is not set")
 	}
 
 	if err := cleanenv.ReadConfig(configPath, cfg); err != nil {
-		fmt.Errorf("Cannot read config: %s", err)
-		return nil
+		return nil, errors.New("Cannot read config")
 	}
 
-	return cfg
+	return cfg, nil
 
 }

@@ -53,7 +53,8 @@ func (h *Handlers) AddTaskHandler(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 	}
-	insertId := strconv.FormatInt(db.AddTask(input), 10)
+	addedId, err := db.AddTask(input)
+	insertId := strconv.FormatInt(addedId, 10)
 	if err != nil {
 		http.Error(w, fmt.Sprintf(`{"error": "%s"}`, err), http.StatusBadRequest)
 		return

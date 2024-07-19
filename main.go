@@ -3,7 +3,6 @@ package main
 import (
 	"log"
 	"net/http"
-	"os"
 
 	"github.com/go-chi/chi/v5"
 
@@ -14,21 +13,25 @@ import (
 
 func main() {
 
-	cfg := config.New()
+	cfg, err := config.New()
+	if err != nil {
+		log.Println("Ошибка в создании кофига: %s", err)
+		return
+	}
 
 	r := chi.NewRouter()
 
 	db, err := store.NewStore("scheduler.db")
 	if err != nil {
-		log.Fatal("failed to init storage", err, db)
-		os.Exit(1)
+		log.Println("failed to init storage", err, db)
+		return
 	}
 	h := handler.NewHandler(db)
 	h.SetHandlers(r)
 	r.Handle("/*", http.FileServer(http.Dir("./web")))
 
 	if err := http.ListenAndServe(cfg.Port, r); err != nil {
-		log.Fatalf("Ошибка при запуске сервера: %s", err.Error())
+		log.Println("Ошибка при запуске сервера: %s", err.Error())
 		return
 	}
 
